@@ -1,0 +1,34 @@
+# Description
+
+This is the Tensorflow experiment code of DNN and CNN, trained with stochastic gradient.
+
+# Data format
+
+LIBSVM format.
+
+# How to run?
+
+1. [Optional] First, use *libsvm_pickle.py* to convert LIBSVM data into pickle format. For example,
+```
+python3 libsvm_pickle.py -f 784 -train /home/data/mnist.scale -test /home/data/mnist.scale.t -d ./data/mnist
+```
+
+2. For deep neural network, run **dnn.py**. E.g.,
+    ```
+    $ python3 dnn.py -lr 1e-2 -dn cifar10 -ht 32 -wt 32 -c 3 -train /home/data/cifar10_RGB_255.scale -test /home/data/cifar10_RGB_255.scale.t
+    $ python3 cnn.py -lr 1e-2 -dn mnist -ht 28 -wt 28 -c 1 -train /home/data/mnist.scale -test /home/data/mnist.scale.t
+    ```
+
+3. For convolution neural network, run **cnn.py**. E.g.,
+    ```
+    $ python3 cnn.py -lr 1e-2 -dn cifar10 -ht 32 -wt 32 -c 3 -train /home/data/cifar10_RGB_255.scale -test /home/data/cifar10_RGB_255.scale.t
+    $ python3 cnn.py -lr 1e-2 -dn mnist -ht 28 -wt 28 -c 1 -train /home/data/mnist.scale -test /home/data/mnist.scale.t
+    ```
+
+# Arguments list
+
+Please see the manual.
+    ```
+    python3 dnn.py -h
+    python3 cnn.py -h
+    ```
