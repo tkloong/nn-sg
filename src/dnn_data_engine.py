@@ -156,18 +156,13 @@ def read_dataset(dataset_name,
                    train_path,
                    test_path,
                    num_classes,
-                   channel,
-                   height,
-                   width,
+                   num_features,
                    one_hot=False,
                    y_label_offset=0,
                    scaling=False,
                    validation_size=0,
                    seed=None):
-    # Read data in LIBSVM format
-    num_features = channel * height * width
-
-    # Read libsvm data
+    # Read LIBSVM data
     try:
         print('Read data from `../data/' + dataset_name + '/train_data.pkl`...')
         with open('../data/' + dataset_name + '/train_data.pkl', 'rb') as filehandler:

@@ -16,9 +16,9 @@ def ArgsParser():
       sys.exit(2)
 
   parser = MyParser()
-  parser.add_argument('-ht', '--height', help='height of the input images', default='28', type=int)
-  parser.add_argument('-wt', '--weight', help='weight of the input images', default='28', type=int)
-  parser.add_argument('-c', '--channel', help='channel of the input images', default='1', type=int)
+  parser.add_argument('-k', '--num_classes', help='Number of classes', required=True, default='', type=int)
+  parser.add_argument('-f', '--num_features', help='Number of features', required=True, default='', type=int)
+  parser.add_argument('-n', '--net', help='Neural network structure excluding input layer. E.g. \"300 300 10\".', required=True, default='', type=lambda s:[int(n) for n in s.split()])
   parser.add_argument('-dn', '--dataset_name', help='It should be the first substring before \'.\' of the LIBSVM data set file. For example, mnist, svhn', required=True, type=str)
   parser.add_argument('-lr', '--learning_rate', help='learning rate', default='5e-2', type=float)
   parser.add_argument('-b', '--batch_size', help='batch size', default='100', type=int)
@@ -34,15 +34,14 @@ if __name__ == '__main__':
   print("SG setting: lr=%lf, batch=%d" % (args.learning_rate, args.batch_size))
 
   # Hyperparameters
-  CHANNEL = args.channel
-  HEIGHT = args.height
-  WIDTH = args.weight
-  NUM_CLASSES = 10
+  NUM_FEATURES = args.num_features
+  NUM_CLASSES = args.num_classes
 
   EPOCH = 360000
   TRAIN_BATCH_SIZE = args.batch_size
   TEST_BATCH_SIZE = 128
 
+  net_struct = args.net
   dataset_name = args.dataset_name
   train_path = args.train_path
   test_path = args.test_path
@@ -50,16 +49,14 @@ if __name__ == '__main__':
   # Initialization
   counter = 0
   elapsed_time = 0.0
-  dataset = de.read_dataset(dataset_name, train_path, test_path, NUM_CLASSES, CHANNEL, HEIGHT, WIDTH, one_hot=True) # Libsvm format dataset
+  dataset = de.read_dataset(dataset_name, train_path, test_path, NUM_CLASSES, NUM_FEATURES, one_hot=True) # Libsvm format dataset
 
   # Input format
-  x = tf.placeholder(tf.float32, shape=[None, HEIGHT * WIDTH * CHANNEL])
+  x = tf.placeholder(tf.float32, shape=[None, NUM_FEATURES])
   y_ = tf.placeholder(tf.float32, shape=[None, NUM_CLASSES])
 
   # Specify nn architecture
-  inp = CHANNEL * HEIGHT * WIDTH
-  clan = 10
-  net_struct = [inp, clan, NUM_CLASSES]
+  net_struct = [NUM_FEATURES] + net_struct
   model = DnnCore(dataset_name, net_struct, TRAIN_BATCH_SIZE)
   y = model.inference(x)
 
